@@ -1,5 +1,10 @@
 import pc from 'picocolors';
-import type { Issue, ScanResult } from '../types.js';
+import {
+  SCORE_ATTENTION_THRESHOLD,
+  SCORE_HEALTHY_THRESHOLD,
+  SCORE_UNHEALTHY_THRESHOLD,
+} from '../constants.js';
+import type { Category, Issue, ScanResult } from '../types.js';
 
 const severityIcon = (severity: Issue['severity']): string => {
   if (severity === 'error') {
@@ -21,18 +26,72 @@ const countBySeverity = (issues: Issue[]) => {
   );
 };
 
+const countByCategory = (issues: Issue[]): Record<Category, number> => {
+  const counts: Record<Category, number> = {
+    architecture: 0,
+    performance: 0,
+    maintainability: 0,
+    security: 0,
+  };
+
+  for (const issue of issues) {
+    counts[issue.category] += 1;
+  }
+
+  return counts;
+};
+
+const scoreEmoji = (score: number): string => {
+  if (score >= SCORE_HEALTHY_THRESHOLD) {
+    return '🟢';
+  }
+
+  if (score >= SCORE_ATTENTION_THRESHOLD) {
+    return '🟡';
+  }
+
+  if (score >= SCORE_UNHEALTHY_THRESHOLD) {
+    return '🟠';
+  }
+
+  return '🔴';
+};
+
+const formatScoreLine = (result: ScanResult): string => {
+  const { score, label } = result.score;
+  const emoji = scoreEmoji(score);
+  const scoreText = `${score}/100`;
+
+  if (score >= SCORE_HEALTHY_THRESHOLD) {
+    return `  ${emoji} ${pc.green(`Score: ${scoreText}`)} — ${label}`;
+  }
+
+  if (score >= SCORE_ATTENTION_THRESHOLD) {
+    return `  ${emoji} ${pc.yellow(`Score: ${scoreText}`)} — ${label}`;
+  }
+
+  if (score >= SCORE_UNHEALTHY_THRESHOLD) {
+    return `  ${emoji} ${pc.yellow(`Score: ${scoreText}`)} — ${label}`;
+  }
+
+  return `  ${emoji} ${pc.red(`Score: ${scoreText}`)} — ${label}`;
+};
+
 export const renderTerminalReport = (
   result: ScanResult,
   toolVersion: string,
 ): string => {
   const lines: string[] = [];
   const counts = countBySeverity(result.issues);
+  const categoryCounts = countByCategory(result.issues);
 
   lines.push('');
   lines.push(`  vue-doctor v${toolVersion}`);
   lines.push('');
   lines.push(`  Project: ${result.projectMeta.name}`);
   lines.push(`  Framework: ${result.projectMeta.framework}`);
+  lines.push('');
+  lines.push(formatScoreLine(result));
   lines.push('');
 
   if (result.issues.length === 0) {
@@ -62,11 +121,22 @@ export const renderTerminalReport = (
   );
   lines.push('');
 
+  const categoryLines = Object.entries(categoryCounts)
+    .filter(([, count]) => count > 0)
+    .map(([category, count]) => `    ${category}: ${count}`);
+
+  if (categoryLines.length > 0) {
+    lines.push('  By category:');
+    lines.push(...categoryLines);
+    lines.push('');
+  }
+
   return lines.join('\n');
 };
 
 export const renderJsonReport = (result: ScanResult, toolVersion: string) => {
   const counts = countBySeverity(result.issues);
+  const categoryCounts = countByCategory(result.issues);
 
   return {
     schemaVersion: 1 as const,
@@ -77,11 +147,13 @@ export const renderJsonReport = (result: ScanResult, toolVersion: string) => {
       framework: result.projectMeta.framework,
       vueVersion: result.projectMeta.vueVersion,
     },
+    score: result.score.score,
     summary: {
       errors: counts.error,
       warnings: counts.warn,
       infos: counts.info,
       total: result.issues.length,
+      byCategory: categoryCounts,
     },
     issues: result.issues,
     durationMs: result.durationMs,

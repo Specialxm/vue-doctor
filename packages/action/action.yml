@@ -1,0 +1,28 @@
+name: Vue Doctor
+description: Scan Vue 3 pull requests for architecture and maintainability issues
+author: vue-doctor
+
+inputs:
+  diff:
+    description: Base branch for PR diff comparison
+    required: false
+    default: main
+  fail-below:
+    description: Fail the workflow when health score is below this threshold (0-100)
+    required: false
+    default: '0'
+  github-token:
+    description: GitHub token for posting PR comments
+    required: true
+
+outputs:
+  score:
+    description: Health score for new issues introduced in the PR
+
+runs:
+  using: node20
+  main: dist/index.js
+
+branding:
+  icon: activity
+  color: green

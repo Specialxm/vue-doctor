@@ -1,6 +1,13 @@
 export * from './types.js';
 export * from './constants.js';
+export * from './errors.js';
+export * from './issue-delta.js';
+export * from './git-diff.js';
 export * from './project-detect.js';
 export * from './sfc-parser.js';
+export * from './import-graph.js';
+export * from './resolve-import-path.js';
+export * from './score.js';
 export * from './scanner.js';
 export { renderTerminalReport, renderJsonReport } from './reporter/terminal.js';
+export { renderPullRequestComment } from './reporter/pr-comment.js';

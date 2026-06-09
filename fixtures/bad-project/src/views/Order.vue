@@ -12,5 +12,5 @@ loadOrders()
 </script>
 
 <template>
-  <div>{{ orders }}</div>
+  <div v-for="order in orders">{{ order }}</div>
 </template>

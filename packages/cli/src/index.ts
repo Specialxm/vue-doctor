@@ -1,5 +1,5 @@
 import { Command } from 'commander';
-import { runScanCommand } from './commands/scan.js';
+import { parseScanOptions, runScanCommand } from './commands/scan.js';
 
 const program = new Command();
 
@@ -9,9 +9,22 @@ program
   .version('0.0.1')
   .argument('[directory]', 'project directory to scan', '.')
   .option('--json', 'output results as JSON')
-  .action(async (directory: string, options: { json?: boolean }) => {
-    const exitCode = await runScanCommand(directory, options);
-    process.exit(exitCode);
+  .option(
+    '--fail-below <score>',
+    'exit with code 1 when health score is below this threshold (0-100)',
+  )
+  .action(async (directory: string, options: { json?: boolean; failBelow?: string }) => {
+    try {
+      const exitCode = await runScanCommand(directory, parseScanOptions(options));
+      process.exit(exitCode);
+    } catch (error) {
+      if (error instanceof Error) {
+        process.stderr.write(`${error.message}\n`);
+        process.exit(2);
+      }
+
+      throw error;
+    }
   });
 
 program.parse();

@@ -3,8 +3,12 @@ import { parse } from '@vue/compiler-sfc';
 import fs from 'node:fs';
 import type { VueFileInfo } from './types.js';
 
-export const parseVueFile = (absolutePath: string, root: string): VueFileInfo | null => {
-  const source = fs.readFileSync(absolutePath, 'utf-8');
+export const parseVueSource = (
+  relativePath: string,
+  root: string,
+  source: string,
+): VueFileInfo | null => {
+  const absolutePath = path.join(root, relativePath);
   const { descriptor, errors } = parse(source, { filename: absolutePath });
 
   if (errors.length > 0) {
@@ -17,16 +21,23 @@ export const parseVueFile = (absolutePath: string, root: string): VueFileInfo | 
 
   return {
     path: absolutePath,
-    relativePath: path.relative(root, absolutePath).replace(/\\/g, '/'),
+    relativePath: relativePath.replace(/\\/g, '/'),
     source,
     scriptContent,
     scriptLang,
   };
 };
 
+export const parseVueFile = (absolutePath: string, root: string): VueFileInfo | null => {
+  const source = fs.readFileSync(absolutePath, 'utf-8');
+  const relativePath = path.relative(root, absolutePath).replace(/\\/g, '/');
+  return parseVueSource(relativePath, root, source);
+};
+
 export const collectVueFiles = async (
   root: string,
   filePaths: string[],
+  sourceOverrides?: ReadonlyMap<string, string>,
 ): Promise<VueFileInfo[]> => {
   const vueFiles: VueFileInfo[] = [];
 
@@ -35,7 +46,14 @@ export const collectVueFiles = async (
       continue;
     }
 
-    const parsed = parseVueFile(filePath, root);
+    const relativePath = path.isAbsolute(filePath)
+      ? path.relative(root, filePath).replace(/\\/g, '/')
+      : filePath.replace(/\\/g, '/');
+    const overrideSource = sourceOverrides?.get(relativePath);
+    const parsed = overrideSource
+      ? parseVueSource(relativePath, root, overrideSource)
+      : parseVueFile(path.join(root, relativePath), root);
+
     if (parsed) {
       vueFiles.push(parsed);
     }
