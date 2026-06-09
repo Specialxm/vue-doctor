@@ -3,6 +3,12 @@ name: vue-doctor
 on:
   pull_request:
     types: [opened, synchronize, reopened, ready_for_review]
+    paths:
+      - 'fixtures/test-vue-app/**'
+      - 'packages/action/**'
+      - 'packages/core/**'
+      - 'packages/rules/**'
+      - '.github/workflows/vue-doctor.yml'
 
 permissions:
   contents: read
@@ -35,7 +41,7 @@ jobs:
 
       - uses: ./packages/action
         with:
-          directory: fixtures/bad-project
+          directory: fixtures/test-vue-app
           diff: main
           fail-below: '0'
           github-token: ${{ secrets.GITHUB_TOKEN }}
