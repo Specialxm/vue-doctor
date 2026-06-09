@@ -30,6 +30,7 @@ const run = async (): Promise<void> => {
 
   const result = await scanPullRequestDiff({
     root,
+    gitRoot: workspace,
     rules: allRules,
     baseBranch,
   });

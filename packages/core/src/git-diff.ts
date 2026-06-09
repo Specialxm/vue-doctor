@@ -89,14 +89,9 @@ export const readFileAtRef = (
   }
 };
 
-export const readWorkingFile = (root: string, relativePath: string): string | null => {
-  try {
-    return execFileSync('git', ['show', `HEAD:${relativePath}`], {
-      cwd: root,
-      encoding: 'utf-8',
-      stdio: ['ignore', 'pipe', 'pipe'],
-    });
-  } catch {
-    return null;
-  }
+export const readWorkingFile = (
+  gitRoot: string,
+  gitRelativePath: string,
+): string | null => {
+  return readFileAtRef('HEAD', gitRelativePath, gitRoot);
 };

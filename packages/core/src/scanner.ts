@@ -104,17 +104,34 @@ const resolveTargetFiles = async (
   ];
 };
 
+const toGitPath = (scanRelativePath: string, scanRootPrefix: string): string =>
+  scanRootPrefix ? `${scanRootPrefix}/${scanRelativePath}` : scanRelativePath;
+
+const normalizeChangedFiles = (
+  allChanged: string[],
+  scanRootPrefix: string,
+): string[] => {
+  const prefix = scanRootPrefix ? `${scanRootPrefix}/` : '';
+
+  return allChanged
+    .filter((file) => !prefix || file.startsWith(prefix))
+    .map((file) => (prefix ? file.slice(prefix.length) : file))
+    .filter((file) => SCANNABLE_FILE_PATTERN.test(file));
+};
+
 const buildSourceOverrides = (
-  root: string,
-  files: string[],
+  gitRoot: string,
+  scanRootPrefix: string,
+  scanRelativePaths: string[],
   ref: string,
 ): Map<string, string> => {
   const overrides = new Map<string, string>();
 
-  for (const relativePath of files) {
-    const source = readFileAtRef(ref, relativePath, root);
+  for (const scanRelativePath of scanRelativePaths) {
+    const gitPath = toGitPath(scanRelativePath, scanRootPrefix);
+    const source = readFileAtRef(ref, gitPath, gitRoot);
     if (source !== null) {
-      overrides.set(relativePath, source);
+      overrides.set(scanRelativePath, source);
     }
   }
 
@@ -157,20 +174,23 @@ export const scanPullRequestDiff = async (
 ): Promise<DiffScanResult> => {
   const startedAt = Date.now();
   const root = path.resolve(options.root);
+  const gitRoot = path.resolve(options.gitRoot ?? root);
+  const scanRootPrefix = path.relative(gitRoot, root).replace(/\\/g, '/');
 
   if (!isVueProject(root)) {
     throw new ScanError(`Not a Vue project: ${root}`);
   }
 
-  if (!isGitRepository(root)) {
-    throw new ScanError(`Not a git repository: ${root}`);
+  if (!isGitRepository(gitRoot)) {
+    throw new ScanError(`Not a git repository: ${gitRoot}`);
   }
 
-  fetchRemoteBranch(options.baseBranch, root);
-  const baseRef = resolveGitRef(options.baseBranch, root);
-  const headRef = resolveGitRef('HEAD', root);
-  const mergeBase = getMergeBase(headRef, baseRef, root);
-  const changedFiles = getChangedFilesBetween(mergeBase, headRef, root);
+  fetchRemoteBranch(options.baseBranch, gitRoot);
+  const baseRef = resolveGitRef(options.baseBranch, gitRoot);
+  const headRef = resolveGitRef('HEAD', gitRoot);
+  const mergeBase = getMergeBase(headRef, baseRef, gitRoot);
+  const allChanged = getChangedFilesBetween(mergeBase, headRef, gitRoot);
+  const changedFiles = normalizeChangedFiles(allChanged, scanRootPrefix);
 
   if (changedFiles.length === 0) {
     const projectMeta = detectProjectMeta(root);
@@ -186,19 +206,34 @@ export const scanPullRequestDiff = async (
     };
   }
 
-  const baselineOverrides = buildSourceOverrides(root, changedFiles, mergeBase);
-  const baselineResult = await scanProject({
-    root,
-    rules: options.rules,
-    includeFiles: changedFiles,
-    sourceOverrides: baselineOverrides,
-  });
+  const baselineOverrides = buildSourceOverrides(
+    gitRoot,
+    scanRootPrefix,
+    changedFiles,
+    mergeBase,
+  );
+  const baselineFileList = changedFiles.filter((file) => baselineOverrides.has(file));
+  const baselineResult =
+    baselineFileList.length > 0
+      ? await scanProject({
+          root,
+          rules: options.rules,
+          includeFiles: baselineFileList,
+          sourceOverrides: baselineOverrides,
+        })
+      : {
+          issues: [],
+          projectMeta: detectProjectMeta(root),
+          durationMs: 0,
+          score: calculateScore([]),
+        };
 
   const currentOverrides = new Map<string, string>();
-  for (const relativePath of changedFiles) {
-    const source = readWorkingFile(root, relativePath);
+  for (const scanRelativePath of changedFiles) {
+    const gitPath = toGitPath(scanRelativePath, scanRootPrefix);
+    const source = readWorkingFile(gitRoot, gitPath);
     if (source !== null) {
-      currentOverrides.set(relativePath, source);
+      currentOverrides.set(scanRelativePath, source);
     }
   }
 
