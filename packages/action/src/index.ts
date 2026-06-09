@@ -1,3 +1,4 @@
+import path from 'node:path';
 import * as core from '@actions/core';
 import * as github from '@actions/github';
 import {
@@ -23,7 +24,9 @@ const run = async (): Promise<void> => {
   const baseBranch = core.getInput('diff') || 'main';
   const failBelow = parseFailBelow(core.getInput('fail-below') || '0');
   const token = core.getInput('github-token', { required: true });
-  const root = process.env.GITHUB_WORKSPACE || process.cwd();
+  const workspace = process.env.GITHUB_WORKSPACE || process.cwd();
+  const directory = core.getInput('directory') || '.';
+  const root = path.resolve(workspace, directory);
 
   const result = await scanPullRequestDiff({
     root,

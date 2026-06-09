@@ -35,6 +35,7 @@ jobs:
 
       - uses: ./packages/action
         with:
+          directory: fixtures/bad-project
           diff: main
           fail-below: '0'
           github-token: ${{ secrets.GITHUB_TOKEN }}
