@@ -1,0 +1,38 @@
+---
+description: packages/core 扫描引擎模块约定
+globs: packages/core/**
+alwaysApply: false
+---
+
+# Core Package Rules
+
+## Responsibilities
+
+- `scanner.ts` — orchestrates scan pipeline
+- `project-detect.ts` — reads package.json, detects Vue/Vite/Pinia/Nuxt
+- `sfc-parser.ts` — wraps @vue/compiler-sfc
+- `import-graph.ts` — builds component/file import graph
+- `score.ts` — health score calculation (formula in docs/02-feature-plan.md)
+- `reporter/` — terminal + JSON output
+- `types.ts` — shared Issue, Rule, ScanContext interfaces
+
+## Constraints
+
+- core MUST NOT import from packages/rules (rules depend on core, not reverse)
+- core MUST NOT contain rule-specific detection logic
+- Export public API from `packages/core/src/index.ts`
+- JSON report must include `schemaVersion: 1` — bump on breaking changes
+
+## ScanContext
+
+Build once in scanner, pass to all rules. Rules must be pure functions of ScanContext.
+
+```typescript
+interface ScanContext {
+  root: string;
+  vueFiles: VueFileInfo[];
+  tsProject: Project;
+  importGraph: ImportGraph;
+  projectMeta: ProjectMeta;
+}
+```

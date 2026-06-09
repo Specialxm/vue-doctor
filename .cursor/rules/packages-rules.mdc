@@ -1,0 +1,51 @@
+---
+description: packages/rules 检测规则模块约定
+globs: packages/rules/**
+alwaysApply: false
+---
+
+# Rules Package
+
+## File Structure
+
+One rule = one file = one test file:
+
+```
+packages/rules/src/
+  direct-api-in-view.ts
+  __tests__/direct-api-in-view.test.ts
+  index.ts          # register all rules
+```
+
+## Implementation Checklist
+
+Before writing code, read `vue-doctor-rule-writing` and `vue-sfc-ast-analysis` skills.
+
+1. Define exact diagnostic condition (one sentence)
+2. Write adversarial tests (valid + invalid + edge cases)
+3. Implement detect() using AST only
+4. Register in index.ts
+5. Run `pnpm test -- --grep "{rule-id}"`
+
+## Anti-patterns
+
+- ❌ `sourceFile.getText().includes('fetch')` — use CallExpression AST
+- ❌ Reporting without file + line number
+- ❌ Catching all .vue files when rule only applies to views/
+- ❌ One mega-file with multiple rules
+
+## Rule Export Pattern
+
+```typescript
+import type { Rule } from '@vue-doctor/core';
+
+export const directApiInView: Rule = {
+  id: 'direct-api-in-view',
+  description: 'API calls should not be made directly in view components',
+  severity: 'error',
+  category: 'architecture',
+  detect(context) {
+    // return Issue[]
+  },
+};
+```

@@ -1,0 +1,32 @@
+---
+description: packages/cli 命令行模块约定
+globs: packages/cli/**
+alwaysApply: false
+---
+
+# CLI Package
+
+## Structure
+
+```
+packages/cli/src/
+  index.ts           # bin entry
+  commands/
+    scan.ts          # default scan command
+    install.ts       # cursor rule install (v0.1.0)
+  utils/
+    parse-args.ts
+```
+
+## Constraints
+
+- Use commander for CLI parsing
+- `--json` outputs ONLY JSON to stdout (no colors, no extra text)
+- `--fail-below` sets exit code 1 when score below threshold
+- Exit codes: 0=pass, 1=fail-below, 2=scan error
+- All flags documented in `--help`
+
+## Public Surface
+
+Changing flags/commands requires `product-thinking` skill first.
+Update `--help` text in the same PR.

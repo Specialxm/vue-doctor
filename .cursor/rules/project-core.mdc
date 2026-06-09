@@ -1,0 +1,16 @@
+---
+description: vue-doctor 项目全局编码规范与架构约束
+alwaysApply: true
+---
+
+# vue-doctor Project Core
+
+Read `AGENTS.md` for full rules. Key constraints:
+
+- pnpm monorepo: packages/core, packages/rules, packages/cli
+- All detection is deterministic AST — no LLM, no regex on source code
+- MVP scope: CLI + rules + score + JSON + GitHub Action only
+- Public surface changes require product-thinking skill first
+- New rules: tests first, then implementation (vue-doctor-rule-writing skill)
+
+When implementing, always check `docs/02-feature-plan.md` for feature ID and acceptance criteria.
