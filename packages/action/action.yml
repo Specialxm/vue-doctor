@@ -3,6 +3,10 @@ description: Scan Vue 3 pull requests for architecture and maintainability issue
 author: vue-doctor
 
 inputs:
+  directory:
+    description: Project directory to scan (relative to repository root)
+    required: false
+    default: .
   diff:
     description: Base branch for PR diff comparison
     required: false

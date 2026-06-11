@@ -44,6 +44,7 @@ describe('scanPullRequestDiff', () => {
 
       const result = await scanPullRequestDiff({
         root: badProjectRoot,
+        gitRoot: repoRoot,
         rules: smokeRules,
         baseBranch: 'main',
       });

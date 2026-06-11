@@ -81,6 +81,7 @@ export interface DiffScanOptions {
   root: string;
   rules: Rule[];
   baseBranch: string;
+  gitRoot?: string;
 }
 
 export interface DiffScanResult {
