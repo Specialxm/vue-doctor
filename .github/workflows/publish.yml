@@ -37,9 +37,9 @@ jobs:
           fi
 
       - run: pnpm install --frozen-lockfile
+      - run: pnpm build
       - run: pnpm typecheck
       - run: pnpm test
-      - run: pnpm build
 
       - name: Verify action bundle exists
         run: test -f packages/action/dist/index.js
