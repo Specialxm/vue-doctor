@@ -4,6 +4,7 @@ on:
   push:
     tags:
       - 'v*'
+  workflow_dispatch:
 
 concurrency:
   group: publish-${{ github.ref }}
@@ -25,6 +26,7 @@ jobs:
         with:
           node-version: 22
           registry-url: https://registry.npmjs.org
+          always-auth: true
           cache: pnpm
 
       - name: Validate tag matches package version
@@ -44,6 +46,11 @@ jobs:
       - name: Verify action bundle exists
         run: test -f packages/action/dist/index.js
 
+      - name: Verify npm auth
+        run: npm whoami --registry https://registry.npmjs.org
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
       - name: Publish to npm
         run: >-
           pnpm publish -r
@@ -51,6 +58,7 @@ jobs:
           --filter '!@vue-doctor/action'
           --access public
           --no-git-checks
+          --registry https://registry.npmjs.org
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
