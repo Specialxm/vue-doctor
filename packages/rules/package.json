@@ -1,6 +1,29 @@
 {
   "name": "@vue-doctor/rules",
-  "version": "0.0.1",
+  "version": "0.1.0",
+  "description": "Deterministic detection rules for vue-doctor",
+  "license": "MIT",
+  "author": "Specialxm",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Specialxm/vue-doctor.git",
+    "directory": "packages/rules"
+  },
+  "bugs": {
+    "url": "https://github.com/Specialxm/vue-doctor/issues"
+  },
+  "homepage": "https://github.com/Specialxm/vue-doctor#readme",
+  "keywords": [
+    "vue",
+    "vue3",
+    "linter",
+    "static-analysis",
+    "rules"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org"
+  },
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -11,12 +34,15 @@
     }
   },
   "files": ["dist"],
+  "engines": {
+    "node": ">=18"
+  },
   "scripts": {
     "build": "tsup",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@vue-doctor/core": "workspace:*",
+    "@vue-doctor/core": "workspace:^0.1.0",
     "@vue/compiler-dom": "^3.5.13",
     "@vue/compiler-sfc": "^3.5.13",
     "ts-morph": "^25.0.1"

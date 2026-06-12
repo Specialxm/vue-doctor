@@ -1,12 +1,13 @@
 import { Command } from 'commander';
 import { parseScanOptions, runScanCommand } from './commands/scan.js';
+import { TOOL_VERSION } from './version.js';
 
 const program = new Command();
 
 program
   .name('vue-doctor')
   .description('Vue 3 codebase health scanner for the AI coding era')
-  .version('0.0.1')
+  .version(TOOL_VERSION)
   .argument('[directory]', 'project directory to scan', '.')
   .option('--json', 'output results as JSON')
   .option(

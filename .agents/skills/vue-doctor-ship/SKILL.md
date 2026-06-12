@@ -85,11 +85,14 @@ Use `gh pr create` with body:
 
 Only when user explicitly requests release:
 
-1. Update version in `packages/cli/package.json`
+1. Bump version in `packages/cli`, `packages/core`, `packages/rules`, `packages/action`
 2. Write CHANGELOG.md entry
-3. `git tag v0.1.0`
-4. `pnpm publish --access public` (from packages/cli)
-5. GitHub Release with notes
+3. `pnpm release:prepare`
+4. `git add packages/action/dist` (ncc bundle required for remote Action)
+5. Commit, push, `git tag v0.1.0`, `git push origin main --tags`
+6. CI `.github/workflows/publish.yml` publishes npm + GitHub Release (needs `NPM_TOKEN` secret)
+
+Manual fallback: `pnpm publish:packages`
 
 ## Stop and Ask
 

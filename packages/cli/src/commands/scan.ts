@@ -7,8 +7,7 @@ import {
   scanProject,
 } from '@vue-doctor/core';
 import { allRules } from '@vue-doctor/rules';
-
-const TOOL_VERSION = '0.0.1';
+import { TOOL_VERSION } from '../version.js';
 
 interface ScanCommandOptions {
   json?: boolean;

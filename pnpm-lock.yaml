@@ -27,15 +27,15 @@ importers:
         specifier: ^6.0.0
         version: 6.0.1
       '@vue-doctor/core':
-        specifier: workspace:*
+        specifier: workspace:^0.1.0
         version: link:../core
       '@vue-doctor/rules':
-        specifier: workspace:*
+        specifier: workspace:^0.1.0
         version: link:../rules
     devDependencies:
-      tsup:
-        specifier: ^8.3.5
-        version: 8.5.1(postcss@8.5.15)(typescript@5.9.3)
+      '@vercel/ncc':
+        specifier: ^0.44.0
+        version: 0.44.0
       typescript:
         specifier: ^5.7.3
         version: 5.9.3
@@ -43,10 +43,10 @@ importers:
   packages/cli:
     dependencies:
       '@vue-doctor/core':
-        specifier: workspace:*
+        specifier: workspace:^0.1.0
         version: link:../core
       '@vue-doctor/rules':
-        specifier: workspace:*
+        specifier: workspace:^0.1.0
         version: link:../rules
       commander:
         specifier: ^13.1.0
@@ -84,7 +84,7 @@ importers:
   packages/rules:
     dependencies:
       '@vue-doctor/core':
-        specifier: workspace:*
+        specifier: workspace:^0.1.0
         version: link:../core
       '@vue/compiler-dom':
         specifier: ^3.5.13
@@ -509,6 +509,10 @@ packages:
 
   '@types/node@22.19.20':
     resolution: {integrity: sha512-6tELRwSDYWW9EdZhbeZmYGZ1/7Djkt+Ah3/ScEYT9cDord7UJzasR/4D3VONg9tQI5CDp+/CZC1AXj2pCFOvpw==}
+
+  '@vercel/ncc@0.44.0':
+    resolution: {integrity: sha512-pHyI+bZokSgIscTKFSmpNk5vZzmOrb9RW0Vu4SRyqUvkJ0kgg3PzaZLLDVTFXhbUiCqg0/Eu8L4fKtgViA92kg==}
+    hasBin: true
 
   '@vitest/expect@3.2.6':
     resolution: {integrity: sha512-1+7q9BtaKzEmO+fmNT3kYvoNn5Y71XWAx2Q5HRim4tTVRQVRv4uJFAQ5FbK0OPUeNP/WmVCpxYxoJdvuHVjzBQ==}
@@ -1319,6 +1323,8 @@ snapshots:
   '@types/node@22.19.20':
     dependencies:
       undici-types: 6.21.0
+
+  '@vercel/ncc@0.44.0': {}
 
   '@vitest/expect@3.2.6':
     dependencies:

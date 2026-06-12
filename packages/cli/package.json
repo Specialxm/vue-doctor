@@ -1,19 +1,49 @@
 {
   "name": "@vue-doctor/cli",
-  "version": "0.0.1",
+  "version": "0.1.0",
+  "description": "Vue 3 codebase health scanner for the AI coding era",
+  "license": "MIT",
+  "author": "Specialxm",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Specialxm/vue-doctor.git",
+    "directory": "packages/cli"
+  },
+  "bugs": {
+    "url": "https://github.com/Specialxm/vue-doctor/issues"
+  },
+  "homepage": "https://github.com/Specialxm/vue-doctor#readme",
+  "keywords": [
+    "vue",
+    "vue3",
+    "linter",
+    "static-analysis",
+    "sfc",
+    "ai",
+    "codebase-health",
+    "scanner",
+    "cli"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org"
+  },
   "type": "module",
   "bin": {
     "vue-doctor": "./dist/index.js"
   },
   "files": ["dist"],
+  "engines": {
+    "node": ">=18"
+  },
   "scripts": {
     "build": "tsup",
     "typecheck": "tsc --noEmit",
     "vue-doctor": "node ./dist/index.js"
   },
   "dependencies": {
-    "@vue-doctor/core": "workspace:*",
-    "@vue-doctor/rules": "workspace:*",
+    "@vue-doctor/core": "workspace:^0.1.0",
+    "@vue-doctor/rules": "workspace:^0.1.0",
     "commander": "^13.1.0"
   },
   "devDependencies": {

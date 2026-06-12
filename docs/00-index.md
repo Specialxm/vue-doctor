@@ -2,6 +2,15 @@
 
 > 开发前准备材料 · 2026-06-09
 
+## 用户文档
+
+| 文档 | 用途 | 何时阅读 |
+|------|------|----------|
+| [../README.md](../README.md) | 用户向英文文档：安装、CLI、Action、规则表 | 使用 vue-doctor 前 |
+| [../README.zh-CN.md](../README.zh-CN.md) | 用户向中文文档（完整版） | 使用 vue-doctor 前 |
+| [../CHANGELOG.md](../CHANGELOG.md) | 版本更新日志 | 升级版本时 |
+| [../.github/workflows/publish.yml](../.github/workflows/publish.yml) | tag 触发 npm 发布 workflow | 发版时 |
+
 ## 文档清单
 
 | 文档 | 用途 | 何时阅读 |

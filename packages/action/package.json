@@ -1,20 +1,20 @@
 {
   "name": "@vue-doctor/action",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "tsup",
+    "build": "ncc build src/index.ts -o dist -m --external @actions/core --external @actions/github",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@actions/core": "^1.10.1",
     "@actions/github": "^6.0.0",
-    "@vue-doctor/core": "workspace:*",
-    "@vue-doctor/rules": "workspace:*"
+    "@vue-doctor/core": "workspace:^0.1.0",
+    "@vue-doctor/rules": "workspace:^0.1.0"
   },
   "devDependencies": {
-    "tsup": "^8.3.5",
+    "@vercel/ncc": "^0.44.0",
     "typescript": "^5.7.3"
   }
 }
