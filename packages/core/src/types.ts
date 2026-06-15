@@ -75,6 +75,7 @@ export interface ScanOptions {
   rules: Rule[];
   includeFiles?: string[];
   sourceOverrides?: ReadonlyMap<string, string>;
+  ignorePatterns?: string[];
 }
 
 export interface DiffScanOptions {

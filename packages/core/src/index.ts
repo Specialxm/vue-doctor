@@ -9,5 +9,5 @@ export * from './import-graph.js';
 export * from './resolve-import-path.js';
 export * from './score.js';
 export * from './scanner.js';
-export { renderTerminalReport, renderJsonReport } from './reporter/terminal.js';
+export { renderTerminalReport, renderJsonReport, renderQuietReport } from './reporter/terminal.js';
 export { renderPullRequestComment } from './reporter/pr-comment.js';

@@ -1,6 +1,6 @@
 {
   "name": "@vue-doctor/rules",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Deterministic detection rules for vue-doctor",
   "license": "MIT",
   "author": "Specialxm",
@@ -42,7 +42,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@vue-doctor/core": "workspace:^0.1.0",
+    "@vue-doctor/core": "workspace:^0.1.1",
     "@vue/compiler-dom": "^3.5.13",
     "@vue/compiler-sfc": "^3.5.13",
     "ts-morph": "^25.0.1"

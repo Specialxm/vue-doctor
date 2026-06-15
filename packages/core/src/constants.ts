@@ -8,6 +8,8 @@ export const MAX_COMPOSABLE_LINES = 150;
 
 export const MAX_COMPONENT_LINES = 300;
 
+export const EMPTY_SCRIPT_TEMPLATE_MIN_LINES = 50;
+
 export const PERFECT_SCORE = 100;
 
 export const ERROR_RULE_PENALTY = 1.5;

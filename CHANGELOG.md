@@ -5,6 +5,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.1] - 2026-06-12
+
+### Added
+
+- **CLI** — `vue-doctor install` generates `.cursor/rules/vue-doctor.mdc` for Cursor integration
+- **CLI** — `--quiet` outputs only the health score; `--ignore <pattern>` skips matching files
+- **3 detection rules** (`@vue-doctor/rules`):
+  - `sync-watch-abuse` (warn) — watch callback mutates the watched source
+  - `deprecated-options-api` (info) — Options API instead of script setup
+  - `empty-script-setup` (info) — empty script setup with a large template
+- **Leaderboard** — scan script and README table for popular Vue OSS projects
+- **GitHub Pages** — minimal landing page at `docs/index.html`
+- **`pnpm leaderboard:scan`** — refresh `docs/leaderboard.json`
+
 ## [0.1.0] - 2026-06-11
 
 ### Added
@@ -33,4 +47,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `.github/workflows/publish.yml` — tag-triggered npm publish and GitHub Release
 - `pnpm release:prepare` — typecheck, test, and build before tagging
 
+[0.1.1]: https://github.com/Specialxm/vue-doctor/releases/tag/v0.1.1
 [0.1.0]: https://github.com/Specialxm/vue-doctor/releases/tag/v0.1.0

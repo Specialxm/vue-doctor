@@ -3,6 +3,7 @@ import {
   ScanError,
   isScorePassing,
   renderJsonReport,
+  renderQuietReport,
   renderTerminalReport,
   scanProject,
 } from '@vue-doctor/core';
@@ -11,7 +12,9 @@ import { TOOL_VERSION } from '../version.js';
 
 interface ScanCommandOptions {
   json?: boolean;
+  quiet?: boolean;
   failBelow?: number;
+  ignorePatterns?: string[];
 }
 
 const parseFailBelow = (value: string): number => {
@@ -45,12 +48,23 @@ export const runScanCommand = async (
     const result = await scanProject({
       root,
       rules: allRules,
+      ignorePatterns: options.ignorePatterns,
     });
 
     if (options.json) {
-      process.stdout.write(
-        `${JSON.stringify(renderJsonReport(result, TOOL_VERSION), null, 2)}\n`,
-      );
+      if (options.quiet) {
+        process.stdout.write(`${JSON.stringify({ score: result.score.score })}\n`);
+      } else {
+        process.stdout.write(
+          `${JSON.stringify(renderJsonReport(result, TOOL_VERSION), null, 2)}\n`,
+        );
+      }
+
+      return resolveExitCode(result, options.failBelow);
+    }
+
+    if (options.quiet) {
+      process.stdout.write(renderQuietReport(result));
       return resolveExitCode(result, options.failBelow);
     }
 
@@ -68,14 +82,21 @@ export const runScanCommand = async (
 
 export const parseScanOptions = (options: {
   json?: boolean;
+  quiet?: boolean;
   failBelow?: string;
+  ignore?: string[];
 }): ScanCommandOptions => {
   const parsed: ScanCommandOptions = {
     json: options.json,
+    quiet: options.quiet,
   };
 
   if (options.failBelow !== undefined) {
     parsed.failBelow = parseFailBelow(options.failBelow);
+  }
+
+  if (options.ignore !== undefined && options.ignore.length > 0) {
+    parsed.ignorePatterns = options.ignore;
   }
 
   return parsed;

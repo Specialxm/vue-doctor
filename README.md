@@ -34,6 +34,24 @@ Output JSON for CI or tooling:
 npx @vue-doctor/cli . --json
 ```
 
+Output only the health score (for CI scripts):
+
+```bash
+npx @vue-doctor/cli . --quiet
+```
+
+Ignore files matching glob patterns:
+
+```bash
+npx @vue-doctor/cli . --ignore "**/legacy/**"
+```
+
+Generate a Cursor rule for AI-assisted coding:
+
+```bash
+npx @vue-doctor/cli install
+```
+
 Fail when the health score is below a threshold:
 
 ```bash
@@ -46,9 +64,18 @@ npx @vue-doctor/cli . --fail-below 70
 |--------|-------------|
 | `[directory]` | Project directory to scan (default: `.`) |
 | `--json` | Print results as JSON |
+| `--quiet` | Print only the health score |
+| `--ignore <pattern>` | Ignore files matching glob (repeatable) |
 | `--fail-below <score>` | Exit with code 1 when health score is below threshold (0–100) |
 | `--version` | Print CLI version |
 | `-h, --help` | Show help |
+
+### Commands
+
+| Command | Description |
+|---------|-------------|
+| `vue-doctor [directory]` | Scan project (default) |
+| `vue-doctor install [directory]` | Generate `.cursor/rules/vue-doctor.mdc` |
 
 ### Exit codes
 
@@ -70,6 +97,20 @@ Each scan produces a score from 0–100 based on unique rules triggered:
 | 0–49 | Critical |
 
 Errors weigh more than warnings. The score reflects rule diversity, not raw issue count.
+
+## Leaderboard
+
+Scores from scanning popular Vue open-source projects with vue-doctor v0.1.x rules (test files ignored). Refresh with `node scripts/leaderboard-scan.mjs`.
+
+| Project | Score | Issues | Link |
+|---------|------:|-------:|------|
+| [Vue Router](https://github.com/vuejs/router) | 99 | 18 | [repo](https://github.com/vuejs/router) |
+| [VueUse](https://github.com/vueuse/vueuse) | 99 | 215 | [repo](https://github.com/vueuse/vueuse) |
+| [Pinia](https://github.com/vuejs/pinia) | 97 | 18 | [repo](https://github.com/vuejs/pinia) |
+| [VeeValidate](https://github.com/logaretm/vee-validate) | 97 | 87 | [repo](https://github.com/logaretm/vee-validate) |
+| [Element Plus](https://github.com/element-plus/element-plus) | 96 | 66 | [repo](https://github.com/element-plus/element-plus) |
+
+Scanned on 2026-06-12. [Submit your project →](https://github.com/Specialxm/vue-doctor/issues/new)
 
 ## GitHub Action
 
@@ -95,7 +136,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - uses: Specialxm/vue-doctor/packages/action@v0.1.0
+      - uses: Specialxm/vue-doctor/packages/action@v0.1.1
         with:
           directory: .
           diff: main
@@ -120,7 +161,7 @@ jobs:
 
 `fetch-depth: 0` is required so git can compare against the base branch.
 
-## Rules (v0.1.0)
+## Rules (v0.1.1)
 
 All rules use deterministic AST analysis — no LLM involved.
 
@@ -132,6 +173,9 @@ All rules use deterministic AST analysis — no LLM involved.
 | `oversized-component` | warn | maintainability | Single-file component exceeds 300 lines |
 | `oversized-composable` | warn | maintainability | Composable (`use*.ts`) exceeds 150 lines |
 | `pinia-store-outside-setup` | warn | architecture | Pinia store accessed outside `setup()` in Options API |
+| `sync-watch-abuse` | warn | performance | `watch` callback mutates the watched value |
+| `deprecated-options-api` | info | maintainability | Component uses Options API instead of `<script setup>` |
+| `empty-script-setup` | info | maintainability | Empty `<script setup>` with a template over 50 lines |
 
 ## JSON Output
 
@@ -140,7 +184,7 @@ With `--json`, output follows `schemaVersion: 1`:
 ```json
 {
   "schemaVersion": 1,
-  "toolVersion": "0.1.0",
+  "toolVersion": "0.1.1",
   "project": {
     "root": "/path/to/project",
     "name": "my-app",
@@ -177,8 +221,8 @@ Maintainers:
 ```bash
 pnpm release:prepare          # typecheck + test + build (includes action bundle)
 git add packages/action/dist  # action dist is required for remote Action usage
-git commit -m "chore: prepare v0.1.0 release"
-git tag v0.1.0
+git commit -m "chore: prepare v0.1.1 release"
+git tag v0.1.1
 git push origin main --tags
 ```
 

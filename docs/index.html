@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>vue-doctor — Vue 3 Codebase Health Scanner</title>
+    <meta
+      name="description"
+      content="Your AI agent writes bad Vue. This catches it. Deterministic AST checks for Vue 3 architecture and maintainability."
+    />
+    <style>
+      :root {
+        color-scheme: light dark;
+        --bg: #0b0f14;
+        --card: #121821;
+        --text: #e7edf4;
+        --muted: #9aa7b5;
+        --accent: #42b883;
+        --border: #243041;
+      }
+
+      @media (prefers-color-scheme: light) {
+        :root {
+          --bg: #f6f8fb;
+          --card: #ffffff;
+          --text: #142033;
+          --muted: #5b6775;
+          --border: #dbe3ec;
+        }
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        line-height: 1.6;
+      }
+
+      main {
+        max-width: 880px;
+        margin: 0 auto;
+        padding: 48px 20px 72px;
+      }
+
+      .badge {
+        display: inline-block;
+        padding: 4px 10px;
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      h1 {
+        font-size: clamp(2rem, 5vw, 3rem);
+        line-height: 1.1;
+        margin: 16px 0 12px;
+      }
+
+      .tagline {
+        font-size: 1.15rem;
+        color: var(--muted);
+        margin: 0 0 28px;
+      }
+
+      .card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 20px;
+        margin: 20px 0;
+      }
+
+      pre {
+        overflow-x: auto;
+        padding: 16px;
+        border-radius: 12px;
+        background: #081018;
+        color: #d7e2ee;
+        border: 1px solid var(--border);
+      }
+
+      code {
+        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      }
+
+      a {
+        color: var(--accent);
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      th,
+      td {
+        padding: 10px 8px;
+        border-bottom: 1px solid var(--border);
+        text-align: left;
+      }
+
+      th:last-child,
+      td:last-child {
+        text-align: right;
+      }
+
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 24px;
+      }
+
+      .button {
+        display: inline-block;
+        padding: 10px 16px;
+        border-radius: 10px;
+        text-decoration: none;
+        border: 1px solid var(--border);
+        color: var(--text);
+      }
+
+      .button.primary {
+        background: var(--accent);
+        border-color: var(--accent);
+        color: #04140d;
+        font-weight: 600;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <span class="badge">Vue 3 · AST · AI-era tooling</span>
+      <h1>vue-doctor</h1>
+      <p class="tagline">Your AI agent writes bad Vue. This catches it.</p>
+
+      <div class="card">
+        <strong>Quick start</strong>
+        <pre><code>npx @vue-doctor/cli .
+npx @vue-doctor/cli install</code></pre>
+        <p>
+          Scan your codebase for architecture violations, Vue anti-patterns, and
+          maintainability issues — deterministic checks, no LLM required.
+        </p>
+      </div>
+
+      <div class="card">
+        <strong>Leaderboard</strong>
+        <table>
+          <thead>
+            <tr>
+              <th>Project</th>
+              <th>Score</th>
+              <th>Issues</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><a href="https://github.com/vuejs/router">Vue Router</a></td>
+              <td>99</td>
+              <td>18</td>
+            </tr>
+            <tr>
+              <td><a href="https://github.com/vueuse/vueuse">VueUse</a></td>
+              <td>99</td>
+              <td>215</td>
+            </tr>
+            <tr>
+              <td><a href="https://github.com/vuejs/pinia">Pinia</a></td>
+              <td>97</td>
+              <td>18</td>
+            </tr>
+            <tr>
+              <td><a href="https://github.com/logaretm/vee-validate">VeeValidate</a></td>
+              <td>97</td>
+              <td>87</td>
+            </tr>
+            <tr>
+              <td><a href="https://github.com/element-plus/element-plus">Element Plus</a></td>
+              <td>96</td>
+              <td>66</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="actions">
+        <a class="button primary" href="https://www.npmjs.com/package/@vue-doctor/cli">npm</a>
+        <a class="button" href="https://github.com/Specialxm/vue-doctor">GitHub</a>
+        <a class="button" href="https://github.com/Specialxm/vue-doctor/blob/main/README.md">Docs</a>
+      </div>
+    </main>
+  </body>
+</html>

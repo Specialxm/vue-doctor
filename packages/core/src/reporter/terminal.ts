@@ -159,3 +159,7 @@ export const renderJsonReport = (result: ScanResult, toolVersion: string) => {
     durationMs: result.durationMs,
   };
 };
+
+export const renderQuietReport = (result: ScanResult): string => {
+  return `${result.score.score}\n`;
+};

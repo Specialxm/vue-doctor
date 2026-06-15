@@ -1,4 +1,5 @@
 node_modules
+.codegraph
 dist
 !packages/action/dist/
 !packages/action/dist/**
@@ -7,3 +8,4 @@ coverage
 .DS_Store
 .turbo
 *.tsbuildinfo
+.leaderboard-cache

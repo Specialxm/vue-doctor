@@ -36,6 +36,24 @@ npx @vue-doctor/cli apps/web
 npx @vue-doctor/cli . --json
 ```
 
+仅输出健康分（适合 CI 脚本）：
+
+```bash
+npx @vue-doctor/cli . --quiet
+```
+
+忽略匹配 glob 的文件：
+
+```bash
+npx @vue-doctor/cli . --ignore "**/legacy/**"
+```
+
+生成 Cursor Rule，引导 AI 遵循 vue-doctor 规则：
+
+```bash
+npx @vue-doctor/cli install
+```
+
 健康分低于阈值时让命令失败（用于 CI gate）：
 
 ```bash
@@ -52,9 +70,18 @@ npx @vue-doctor/cli . --fail-below 70
 |------|------|
 | `[directory]` | 要扫描的项目目录（默认 `.`） |
 | `--json` | 以 JSON 格式输出结果 |
+| `--quiet` | 仅输出健康分 |
+| `--ignore <pattern>` | 忽略匹配 glob 的文件（可重复） |
 | `--fail-below <score>` | 健康分低于该阈值（0–100）时退出码为 1 |
 | `--version` | 显示版本号 |
 | `-h, --help` | 显示帮助 |
+
+### 子命令
+
+| 命令 | 说明 |
+|------|------|
+| `vue-doctor [directory]` | 扫描项目（默认） |
+| `vue-doctor install [directory]` | 生成 `.cursor/rules/vue-doctor.mdc` |
 
 ### 退出码
 
@@ -76,6 +103,20 @@ npx @vue-doctor/cli . --fail-below 70
 | 0–49 | Critical（严重） |
 
 error 扣分权重高于 warn。分数反映的是规则覆盖面的严重程度，而非单文件 issue 数量。
+
+## Leaderboard
+
+使用 vue-doctor v0.1.x 规则扫描知名 Vue 开源项目（已忽略测试文件）。运行 `node scripts/leaderboard-scan.mjs` 可刷新数据。
+
+| 项目 | 分数 | Issue 数 | 链接 |
+|------|-----:|---------:|------|
+| [Vue Router](https://github.com/vuejs/router) | 99 | 18 | [repo](https://github.com/vuejs/router) |
+| [VueUse](https://github.com/vueuse/vueuse) | 99 | 215 | [repo](https://github.com/vueuse/vueuse) |
+| [Pinia](https://github.com/vuejs/pinia) | 97 | 18 | [repo](https://github.com/vuejs/pinia) |
+| [VeeValidate](https://github.com/logaretm/vee-validate) | 97 | 87 | [repo](https://github.com/logaretm/vee-validate) |
+| [Element Plus](https://github.com/element-plus/element-plus) | 96 | 66 | [repo](https://github.com/element-plus/element-plus) |
+
+扫描日期：2026-06-12。[提交你的项目 →](https://github.com/Specialxm/vue-doctor/issues/new)
 
 ## GitHub Action
 
@@ -101,7 +142,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - uses: Specialxm/vue-doctor/packages/action@v0.1.0
+      - uses: Specialxm/vue-doctor/packages/action@v0.1.1
         with:
           directory: .
           diff: main
@@ -128,13 +169,13 @@ jobs:
 
 - 必须设置 `fetch-depth: 0`，否则 git 无法对比基准分支。
 - monorepo 子项目扫描：将 `directory` 设为子目录路径，如 `apps/web`。
-- Action 引用本仓库子目录 `packages/action`，请 pin 到 release tag（如 `v0.1.0`）。release tag 包含 ncc 打包后的 `dist/index.js`（自包含，无需额外 `node_modules`）。
+- Action 引用本仓库子目录 `packages/action`，请 pin 到 release tag（如 `v0.1.1`）。release tag 包含 ncc 打包后的 `dist/index.js`（自包含，无需额外 `node_modules`）。
 
 ### 与本仓库 CI 的区别
 
 本仓库 CI 使用本地路径 `uses: ./packages/action`（先 `pnpm build`），适合开发调试。用户项目应引用远程 tag，如上方示例。
 
-## 检测规则（v0.1.0）
+## 检测规则（v0.1.1）
 
 所有规则均为确定性 AST 分析，**不使用 LLM**。
 
@@ -146,6 +187,9 @@ jobs:
 | `oversized-component` | warn | maintainability | 单文件组件超过 300 行 |
 | `oversized-composable` | warn | maintainability | composable（`use*.ts`）超过 150 行 |
 | `pinia-store-outside-setup` | warn | architecture | Options API 中在 `setup()` 外使用 Pinia store |
+| `sync-watch-abuse` | warn | performance | `watch` 回调修改被监听的值 |
+| `deprecated-options-api` | info | maintainability | 使用 Options API 而非 `<script setup>` |
+| `empty-script-setup` | info | maintainability | 空的 `<script setup>` 配合超过 50 行的 template |
 
 ### 规则设计理念
 
@@ -162,7 +206,7 @@ jobs:
 ```json
 {
   "schemaVersion": 1,
-  "toolVersion": "0.1.0",
+  "toolVersion": "0.1.1",
   "project": {
     "root": "/path/to/project",
     "name": "my-app",
@@ -230,8 +274,8 @@ pnpm vue-doctor fixtures/bad-project --json
 ```bash
 pnpm release:prepare              # typecheck + test + build
 git add packages/action/dist    # Action 远程引用需要打包产物
-git commit -m "chore: prepare v0.1.0 release"
-git tag v0.1.0
+git commit -m "chore: prepare v0.1.1 release"
+git tag v0.1.1
 git push origin main --tags
 ```
 

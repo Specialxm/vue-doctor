@@ -1,0 +1,58 @@
+{
+  "scannedAt": "2026-06-12",
+  "projects": [
+    {
+      "name": "Vue Router",
+      "url": "https://github.com/vuejs/router",
+      "directory": "packages/router",
+      "score": 99,
+      "label": "Healthy",
+      "issues": 18,
+      "errors": 0,
+      "warnings": 18,
+      "durationMs": 2011
+    },
+    {
+      "name": "VueUse",
+      "url": "https://github.com/vueuse/vueuse",
+      "directory": ".",
+      "score": 99,
+      "label": "Healthy",
+      "issues": 215,
+      "errors": 0,
+      "warnings": 215
+    },
+    {
+      "name": "Pinia",
+      "url": "https://github.com/vuejs/pinia",
+      "directory": ".",
+      "score": 97,
+      "label": "Healthy",
+      "issues": 18,
+      "errors": 2,
+      "warnings": 16,
+      "durationMs": 1462
+    },
+    {
+      "name": "VeeValidate",
+      "url": "https://github.com/logaretm/vee-validate",
+      "directory": ".",
+      "score": 97,
+      "label": "Healthy",
+      "issues": 87,
+      "errors": 1,
+      "warnings": 86
+    },
+    {
+      "name": "Element Plus",
+      "url": "https://github.com/element-plus/element-plus",
+      "directory": "packages/components",
+      "score": 96,
+      "label": "Healthy",
+      "issues": 66,
+      "errors": 3,
+      "warnings": 63,
+      "durationMs": 11483
+    }
+  ]
+}

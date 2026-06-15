@@ -26,6 +26,7 @@ import {
   resolveGitRef,
 } from './git-diff.js';
 import { filterIssuesToFiles, filterNewIssues } from './issue-delta.js';
+import { filterIgnoredPaths } from './match-ignore-pattern.js';
 import { collectVueFiles } from './sfc-parser.js';
 import { detectProjectMeta, isVueProject } from './project-detect.js';
 import { calculateScore } from './score.js';
@@ -81,27 +82,40 @@ const buildTsFiles = (
 const resolveTargetFiles = async (
   root: string,
   includeFiles?: string[],
+  ignorePatterns: readonly string[] = [],
 ): Promise<string[]> => {
+  const globIgnore = [...IGNORED_DIRS, ...ignorePatterns];
+
   if (includeFiles) {
-    return includeFiles.filter((file) => SCANNABLE_FILE_PATTERN.test(file));
+    return filterIgnoredPaths(
+      includeFiles.filter((file) => SCANNABLE_FILE_PATTERN.test(file)),
+      ignorePatterns,
+    );
   }
 
   const vueFilePaths = await glob(VUE_FILE_GLOB, {
     cwd: root,
     absolute: true,
-    ignore: IGNORED_DIRS,
+    ignore: globIgnore,
   });
 
   const tsFilePaths = await glob(TS_FILE_GLOB, {
     cwd: root,
     absolute: true,
-    ignore: IGNORED_DIRS,
+    ignore: globIgnore,
   });
 
-  return [
-    ...vueFilePaths.map((filePath) => path.relative(root, filePath).replace(/\\/g, '/')),
-    ...tsFilePaths.map((filePath) => path.relative(root, filePath).replace(/\\/g, '/')),
-  ];
+  return filterIgnoredPaths(
+    [
+      ...vueFilePaths.map((filePath) =>
+        path.relative(root, filePath).replace(/\\/g, '/'),
+      ),
+      ...tsFilePaths.map((filePath) =>
+        path.relative(root, filePath).replace(/\\/g, '/'),
+      ),
+    ],
+    ignorePatterns,
+  );
 };
 
 const toGitPath = (scanRelativePath: string, scanRootPrefix: string): string =>
@@ -146,7 +160,11 @@ export const scanProject = async (options: ScanOptions): Promise<ScanResult> => 
     throw new ScanError(`Not a Vue project: ${root}`);
   }
 
-  const targetFiles = await resolveTargetFiles(root, options.includeFiles);
+  const targetFiles = await resolveTargetFiles(
+    root,
+    options.includeFiles,
+    options.ignorePatterns,
+  );
   const vueRelativePaths = targetFiles.filter((file) => file.endsWith('.vue'));
   const vueFilePaths = vueRelativePaths.map((file) => path.join(root, file));
   const vueFiles = await collectVueFiles(root, vueFilePaths, options.sourceOverrides);

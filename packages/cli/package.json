@@ -1,6 +1,6 @@
 {
   "name": "@vue-doctor/cli",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Vue 3 codebase health scanner for the AI coding era",
   "license": "MIT",
   "author": "Specialxm",
@@ -42,8 +42,8 @@
     "vue-doctor": "node ./dist/index.js"
   },
   "dependencies": {
-    "@vue-doctor/core": "workspace:^0.1.0",
-    "@vue-doctor/rules": "workspace:^0.1.0",
+    "@vue-doctor/core": "workspace:^0.1.1",
+    "@vue-doctor/rules": "workspace:^0.1.1",
     "commander": "^13.1.0"
   },
   "devDependencies": {
