@@ -118,6 +118,24 @@ error 扣分权重高于 warn。分数反映的是规则覆盖面的严重程度
 
 扫描日期：2026-06-12。[提交你的项目 →](https://github.com/Specialxm/vue-doctor/issues/new)
 
+## GitHub Pages
+
+极简 landing 页：**[vuedoctor.dev](https://vuedoctor.dev)**（源码 [`docs/index.html`](./docs/index.html)）。
+
+由 [`.github/workflows/pages.yml`](./.github/workflows/pages.yml) 自动部署（`deploy-pages@v5`，Node.js 24）。
+
+**配置清单**
+
+1. **Settings → Pages → Source：** GitHub Actions
+2. **自定义域名：** `vuedoctor.dev`（[`docs/CNAME`](./docs/CNAME)）
+3. **DNS**（在域名注册商）：
+   - 根域 `@` → `A` 记录：`185.199.108.153` ~ `185.199.111.153`（GitHub Pages 四个 IP）
+   - 或 `www` → `CNAME` → `specialxm.github.io`
+4. DNS 生效后，在 Pages 设置中勾选 **Enforce HTTPS**（证书就绪前 environment URL 可能显示 `http://`）
+5. 必要时重跑 **Deploy GitHub Pages**
+
+备用地址：`https://specialxm.github.io/vue-doctor/`
+
 ## GitHub Action
 
 在 Pull Request 上自动运行，**只扫描 PR 变更的文件**，并在 PR 中发表评论展示本次引入的新 issue。

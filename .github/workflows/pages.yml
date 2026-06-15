@@ -1,11 +1,17 @@
+# Deploy static landing page from docs/ to GitHub Pages.
+#
+# Custom domain: vuedoctor.dev (see docs/CNAME)
+# One-time setup: Settings → Pages → Source: GitHub Actions
+# Then enable "Enforce HTTPS" once DNS + certificate are ready.
+
 name: Deploy GitHub Pages
 
 on:
   push:
     branches: [main]
     paths:
-      - docs/index.html
-      - docs/leaderboard.json
+      - docs/**
+      - .github/workflows/pages.yml
   workflow_dispatch:
 
 permissions:
@@ -24,13 +30,11 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
-      - uses: actions/configure-pages@v5
-
-      - uses: actions/upload-pages-artifact@v3
+      - uses: actions/upload-pages-artifact@v5
         with:
           path: docs
 
       - id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5
