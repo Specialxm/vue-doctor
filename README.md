@@ -114,21 +114,9 @@ Scanned on 2026-06-12. [Submit your project →](https://github.com/Specialxm/vu
 
 ## GitHub Pages
 
-Minimal landing page: **[vuedoctor.dev](https://vuedoctor.dev)** (source in [`docs/index.html`](./docs/index.html)).
+Landing page: **[specialxm.github.io/vue-doctor](https://specialxm.github.io/vue-doctor/)** (source in [`docs/index.html`](./docs/index.html)).
 
-CI deploys via [`.github/workflows/pages.yml`](./.github/workflows/pages.yml) using `actions/deploy-pages@v5` (Node.js 24).
-
-**Setup checklist**
-
-1. **Settings → Pages → Source:** GitHub Actions
-2. **Custom domain:** `vuedoctor.dev` (also in [`docs/CNAME`](./docs/CNAME))
-3. **DNS** at your registrar:
-   - Apex `@` → `A` records: `185.199.108.153`, `185.199.109.153`, `185.199.110.153`, `185.199.111.153`
-   - Or `www` → `CNAME` → `specialxm.github.io` (if using subdomain)
-4. After DNS propagates, enable **Enforce HTTPS** in Pages settings (fixes `http://` environment URL until certificate is ready)
-5. Re-run **Deploy GitHub Pages** if needed
-
-Fallback URL: `https://specialxm.github.io/vue-doctor/`
+Deployed via [`.github/workflows/pages.yml`](./.github/workflows/pages.yml). Requires **Settings → Pages → Source: GitHub Actions** (no custom domain or DNS needed).
 
 ## GitHub Action
 

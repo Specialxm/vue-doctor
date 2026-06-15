@@ -1,8 +1,7 @@
 # Deploy static landing page from docs/ to GitHub Pages.
 #
-# Custom domain: vuedoctor.dev (see docs/CNAME)
+# Site URL: https://specialxm.github.io/vue-doctor/
 # One-time setup: Settings → Pages → Source: GitHub Actions
-# Then enable "Enforce HTTPS" once DNS + certificate are ready.
 
 name: Deploy GitHub Pages
 
